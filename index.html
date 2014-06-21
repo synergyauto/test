@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<script id="script" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="../bower_components/platform/platform.js"></script>
+<link rel="stylesheet" href="../bower_components/polymer-ui-base/base.css">
+
+<link rel="import" href="../bower_components/core-scaffold/core-scaffold.html">
+<link rel="import" href="../bower_components/core-header-panel/core-header-panel.html">
+<link rel="import" href="../bower_components/core-menu/core-menu.html">
+<link rel="import" href="../bower_components/core-item/core-item.html">
+<link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
+<link rel="import" href="../bower_components/core-toolbar/core-toolbar.html">
+<link rel="import" href="../bower_components/core-menu/core-submenu.html">
+<link rel="import" href="../bower_components/core-field/core-field.html">
+<link rel="import" href="../bower_components/core-icon/core-icon.html">
+<link rel="import" href="../bower_components/core-input/core-input.html">
+<link rel="import" href="../bower_components/speech-mic/speech-mic.html">
+
+<polymer-element name="windshield-time">
+
+  <template>
+    <style>    
+      section {
+        padding: 5px;
+      }
+      :host {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+      }
+      .hidden {
+        display: none;
+      }
+      #core_scaffold {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        bottom: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+      }
+      #core_toolbar {
+        background-color: rgb(0, 128, 192);
+      }
+      #core_menu {
+        font-size: 16px;
+      }
+      #btnHome:hover, #btnContacts:hover, #btnSchedule:hover, #btnJobLists:hover, #btnSettings:hover{
+        background-color:#369;color:white;
+      }
+      #core_card {
+        display: block;
+        width: 300px;
+        height: 300px;
+        padding: 4px;
+        border-top-left-radius: 2px;
+        border-top-right-radius: 2px;
+        border-bottom-right-radius: 2px;
+        border-bottom-left-radius: 2px;
+        box-shadow: rgba(0, 0, 0, 0.0980392) 0px 2px 4px, rgba(0, 0, 0, 0.0980392) 0px 0px 3px;
+        margin: 15px;
+      }
+      #img {
+        width: 200px;
+      }
+      #canvas {
+        -webkit-user-select: none;
+      }
+      #smoothie_chart {
+        left: 1670px;
+        top: 710px;
+      }
+      #ace_element {
+        width: 400px;
+        height: 300px;
+        left: 270px;
+        top: 70px;
+      }
+      #core_layout {
+        width: 400px;
+        height: 400px;
+        opacity: 1;
+        position: relative;
+      }
+      .onefourpix {
+        font-size: 18px;
+      }
+      #speech_mic {
+        right: 5px;
+        z-index: 15;
+        background-color: rgb(255, 255, 255);
+      }
+      #svg {
+        pointer-events: none;
+        width: 24px;
+        height: 24px;
+        vertical-align: middle;
+      }
+      #core_input {
+        width: 100px;
+        padding: 10px;
+        height: 100px;
+        display: block;
+      }
+      #txtInput {
+        padding: 10px;
+        border: 1px solid rgb(153, 153, 153);
+        width: 300px;
+        height: 400px;
+      }
+      #section {
+        width: 200px;
+        height: 300px;
+      }
+      #google_map {
+        width: 400px;
+        height: 400px;
+        display: block;
+      }
+      #pnlCallData {
+        width: 400px;
+      }
+      #core_field {
+        width: auto;
+      }
+      .logo {
+        font-style: italic;
+      }
+      #core_drawer_panel {
+        position: absolute;
+        top: 690px;
+        right: 0px;
+        bottom: 0px;
+        left: 1670px;
+      }
+      #core_selector {
+        width: 100%;
+        height: 50px;
+      }
+    </style>
+    
+    <core-scaffold id="core_scaffold">
+      <div id="header-logo" tool class="logo">
+        
+      </div>
+      <core-header-panel mode="seamed" id="core_header_panel" navigation flex>
+        <core-toolbar id="core_toolbar"><img src="/images/WT_logo.png">
+          </core-toolbar>
+        <core-menu selected="Settings" valueattr="label" selectedindex="0" id="core_menu" theme="core-light-theme">
+          <core-item class="core-item" label="Home" icon="home" id="btnHome" on-tap="{{ showPanel }}" horizontal center layout active></core-item>
+          <core-item label="Contacts" icon="account-box" id="btnContacts" on-tap="{{ showPanel }}" horizontal center layout></core-item>
+          <core-item label="Schedule" icon="schedule" id="btnSchedule" on-tap="{{ showPanel }}" horizontal center layout></core-item>
+          <core-item label="Job Lists" icon="menu" id="btnJobLists" on-tap="{{ showPanel }}" horizontal center layout></core-item>
+          <core-item label="Settings" icon="settings" id="btnSettings" on-tap="{{ showPanel }}" horizontal center layout ></core-item>
+        </core-menu>
+      </core-header-panel>
+      <section id="pnlHome" class="section">
+        <img src="/images/WT_logo.png"><br/>
+        <core-item label="START" icon="schedule" id="btnStart" horizontal center layout></core-item>
+      </section>
+      <section id="pnlContacts" class="section">
+        <h3>Contacts Screen</h3>
+      </section>
+      <section id="pnlSchedule" class="section">
+        <h3>Schedule Screen</h3>
+      </section>
+      <section id="pnlJobLists" class="section">
+        <h3>Job Lists Screen</h3>
+      </section>
+      <section id="pnlSettings" class="section">
+        <core-item label="Settings" icon="settings" id="pnlSettingsBtnSettings" horizontal center layout></core-item>
+        <polymer-selector target="myForm" itemsselector="input[type=radio]" selected valueattr="value" selectedproperty="checked" activateevent="change"></polymer-selector>
+        <h3>Contact Options</h3>
+        <form id="myForm">
+          <label>
+            <input type="radio" name="color" value="red"> Red
+          </label>
+          <br/>
+          <label>
+            <input type="radio" name="color" value="green"> Green
+          </label>
+          <br/>
+          <label>
+            <input type="radio" name="color" value="blue"> Blue
+          </label>
+          <br/>
+        </form>
+        <polymer-selector target="scheduleForm" itemsselector="input[type=radio]" selected valueattr="value" selectedproperty="checked" activateevent="change"></polymer-selector>
+        <h3>Schedule Options</h3>
+        <form id="scheduleForm">
+          <label>
+            <input type="radio" name="scheduleOptions" value="One"> One
+          </label>
+          <br/>
+          <label>
+            <input type="radio" name="scheduleOptions" value="Two"> Two
+          </label>
+          <br/>
+          <label>
+            <input type="radio" name="scheduleOptions" value="Three"> Three
+          </label>
+          <br/>
+        </form>
+      </section>
+      <section id="pnlCallData" class="section" if>
+        <core-field id="core_field" icon="search" theme="core-light-theme" center horizontal layout>
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <div>Call Disposition</div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <core-input placeholder="Enter or Record Call Data..." multiline rows="20" id="txtInput" nine flex></core-input>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <speech-mic id="speech_mic"></speech-mic>
+        </core-field>
+      </section>
+    </core-scaffold>
+  </template>
+
+  <script>
+
+    Polymer('windshield-time', {
+      showPanel: function (e, detail, sender) {
+        this.$.pnlHome.hidden = true;
+        this.$.pnlContacts.hidden = true;
+        this.$.pnlCallData.hidden = true;
+        this.$.pnlJobLists.hidden = true;
+        this.$.pnlSettings.hidden = true;
+        this.$.pnlSchedule.hidden = true;
+       	if(sender.id=='btnHome') this.$.pnlHome.hidden = false;
+        if(sender.id=='btnContacts') this.$.pnlContacts.hidden = false;
+        if(sender.id=='btnSchedule') this.$.pnlSchedule.hidden = false;
+        if(sender.id=='btnJobLists') this.$.pnlJobLists.hidden = false;
+        if(sender.id=='btnSettings') this.$.pnlSettings.hidden = false;
+      },
+      ready: function () {  }
+    });
+
+  </script>
+
+</polymer-element>
+
+<windshield-time></windshield-time>
